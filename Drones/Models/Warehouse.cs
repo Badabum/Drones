@@ -9,6 +9,8 @@ namespace GHQualification.Models
     /// </summary>
     public class Warehouse :IDrawableObject
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
         public int R { get; set; }
         public int C { get; set; }
         public List<int> Products { get; set; }

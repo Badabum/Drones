@@ -8,6 +8,8 @@ namespace Drones.Models
 {
     interface IDrawableObject
     {
+         string Name { get; }
+         int Id { get; set; }
          int R { get; set; }
          int C { get; set; }
     }

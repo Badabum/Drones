@@ -58,7 +58,9 @@ namespace Drones.Common
                         wareHouse.C = int.Parse(coords[1]);
                         var products = streamReader.ReadLine().Split(' ').Select(p=>int.Parse(p));
                         wareHouse.Products = products.ToList();
+                        wareHouse.Id = j;
                         wareHouses.Add(wareHouse);
+                        
                     }
                     genInfo.Orders = int.Parse(streamReader.ReadLine());
                     var orders = new List<Order>(genInfo.Orders);
@@ -69,7 +71,8 @@ namespace Drones.Common
                         order.R = int.Parse(coords[0]);
                         order.C = int.Parse(coords[1]);
                         order.ProductItemsCount = int.Parse(streamReader.ReadLine());
-                        order.ProductTypes = streamReader.ReadLine().Split(' ').Select(p => int.Parse(p)).ToList();
+                        order.Products = streamReader.ReadLine().Split(' ').Select(p => int.Parse(p)).ToList();
+                        order.Id = k;
                         orders.Add(order);
                         Console.WriteLine(k);
                     }

@@ -14,6 +14,8 @@ namespace Drones.Models
         public int R { get; set; }
         public int C { get; set; }
 
+        public string Name => $"d{Id}";
+
         public bool HasFinishedCommand()
         {
             return Turns == 0;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Drones.Models;
 using GHQualification.Models;
 
@@ -10,16 +11,20 @@ namespace Drones.Common
     {
         private readonly DataModel _dataModel;
 
+        public delegate void RefreshDrones(List<Drone> drones);
+
+        public event RefreshDrones onDronesChanged;
+
         public OrdersProcessor(DataModel dataModel)
         {
             _dataModel = dataModel;
         }
 
-        public void Process()
+        public void Process(int steps)
         {
             var output = new List<string>();//comands
             var productQueue = MakeOrderProductQueue(_dataModel.Orders);
-            var freeDronesQueue = InitDronesWithCommands(productQueue, _dataModel.GeneralInfo.Drones,
+            var freeDronesQueue = InitDronesWithCommands(productQueue, 1,
                 _dataModel.GeneralInfo.MaxWeight, _dataModel.Warehouses, _dataModel.Orders);
             var droneList = freeDronesQueue.ToList();
 
@@ -36,7 +41,7 @@ namespace Drones.Common
             }
             //the simulation starts after this assignment 
 
-            for (var t = 0; t < _dataModel.GeneralInfo.Steps; t++)
+            for (var t = 0; t < steps; t++)
             {
                 foreach (var drone in droneList)
                 {
@@ -59,9 +64,8 @@ namespace Drones.Common
                     else {
                         drone.Turns--;
                     }
+
                 }
-
-
                 //command set
                 var freeDrones = freeDronesQueue.Count;
                 for (var i=0; i<freeDrones;i++)
@@ -74,10 +78,16 @@ namespace Drones.Common
                         productQueue.Remove(product.Key);
                         drone.AddLoadCommand(product,_dataModel.Warehouses);
                         drone.AddDeliveryCommand(product,_dataModel.Orders);
+                        
                     }
                     
                 }
+                if (t%500 == 0)
+                {
+                    onDronesChanged?.Invoke(droneList);
+                    Thread.Sleep(500);
 
+                }
             }
         }
         
@@ -111,7 +121,7 @@ namespace Drones.Common
             foreach (var order in orders)
             {
 
-                foreach (var item in order.ProductTypes)
+                foreach (var item in order.Products)
                 {
                     productQueue.Add(new OrderDto() { OrderId = orderId, ProductItem = item }, new Point { R = order.R, C = order.C });
                 }

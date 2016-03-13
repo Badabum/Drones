@@ -11,5 +11,7 @@
                       HorizontalScrollBarVisibility="Auto" Margin="10,10,301,10">
             <Canvas Name="mainCanvas" Width="671" Height="539"/>
         </ScrollViewer>
+        <Button x:Name="button" Content="Run" Margin="0,10,10,0"
+                Click="Button_OnClick" Height="51" VerticalAlignment="Top" HorizontalAlignment="Right" Width="264"/>
     </Grid>
 </Window>

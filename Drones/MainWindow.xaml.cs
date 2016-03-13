@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,20 +25,28 @@ namespace Drones
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly int gridCellSize = 3;
+        private OrdersProcessor _ordersProcessor;
         public MainWindow()
         {
             const string busyDay = "busy_day";
             const string redundancy = "redundancy";
             const string mamka = "mother_of_all_warehouses";
             InitializeComponent();
-            var gridCellSize = 3;
+            
             var path = $@"C:\Users\Ihor\Documents\visual studio 2015\Projects\Drones\Drones\{busyDay}.in";
             var reader = new FileOperations(path);
             var _dataModel = reader.ReadFileAsync();
             DrawGrid(_dataModel.GeneralInfo.Columns,_dataModel.GeneralInfo.Rows,gridCellSize);
             DrawObjects(_dataModel.Warehouses, Brushes.Green,3, gridCellSize);
             DrawObjects(_dataModel.Orders, Brushes.Yellow,1,gridCellSize);
-            
+            _ordersProcessor =  new OrdersProcessor(_dataModel);
+            _ordersProcessor.onDronesChanged += (drones) =>
+            {
+                Dispatcher.Invoke((Action)delegate { RedrawDrones(drones); });
+            };
+
+
         }
 
         private void DrawGrid(int columns, int rows, int cellWidth = 10)
@@ -83,16 +92,43 @@ namespace Drones
                 {
                     Width = shapeSize*gridCellSize,
                     Height = shapeSize*gridCellSize,
-                    Fill = color
+                    Fill = color,
+                    Name = drawable.Name, 
+                    
                 };
+                var label = new Label()
+                {
+                    Content = drawable.Name,
+                    Name = drawable.Name
+                };
+                mainCanvas.Children.Add(label);
+                Canvas.SetTop(label, drawable.R * gridCellSize);
+                Canvas.SetLeft(label, drawable.C * gridCellSize);
                 mainCanvas.Children.Add(rectangle);
                 Canvas.SetTop(rectangle,drawable.R*gridCellSize);
                 Canvas.SetLeft(rectangle, drawable.C*gridCellSize);
             }
         }
 
+        public void RedrawDrones(List<Drone> drones)
+        {
+            ClearDrones(drones);
+            DrawObjects(drones,Brushes.Red,2,gridCellSize);
+        }
 
-        
-
+        private void ClearDrones(List<Drone> drones)
+        {
+            foreach (var drone in drones)
+            {
+                var element1 = (UIElement)LogicalTreeHelper.FindLogicalNode(mainCanvas, drone.Name);
+                mainCanvas.Children.Remove(element1);
+                var element2 = (UIElement)LogicalTreeHelper.FindLogicalNode(mainCanvas, drone.Name);
+                mainCanvas.Children.Remove(element2);
+            }
+        }
+        private async void Button_OnClick(object sender, RoutedEventArgs e)
+        {
+            await Task.Factory.StartNew(() => { _ordersProcessor.Process(120000); });
+        }
     }
 }
