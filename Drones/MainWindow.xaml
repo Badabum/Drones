@@ -1,17 +1,60 @@
-﻿<Window x:Class="Drones.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Drones"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" x:Class="Drones.MainWindow"
+        xmlns:telerikCharting="clr-namespace:Telerik.Windows.Controls.Charting;assembly=Telerik.Windows.Controls.Charting"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Auto" Margin="10,10,301,10">
-            <Canvas Name="mainCanvas" Width="671" Height="539"/>
-        </ScrollViewer>
-        <Button x:Name="button" Content="Run" Margin="0,10,10,0"
-                Click="Button_OnClick" Height="51" VerticalAlignment="Top" HorizontalAlignment="Right" Width="264"/>
+        
+        
+        <telerik:RadTabControl x:Name="radTabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <telerik:RadTabItem x:Name="ChartsTab" Header="Charts" Height="46" Width="100">
+                <Grid Background="Transparent">
+                    <telerik:RadChart Name="simpleAlgoChart" Margin="10,10,508,10">
+                        <telerik:RadChart.DefaultView>
+                            <telerik:ChartDefaultView>
+                                <telerik:ChartDefaultView.ChartTitle>
+                                    <telerik:ChartTitle Content="Basic algorithm"></telerik:ChartTitle>
+                                </telerik:ChartDefaultView.ChartTitle>
+                                <telerik:ChartDefaultView.ChartLegend>
+                                    <telerik:ChartLegend Header="Legend"></telerik:ChartLegend>
+                                </telerik:ChartDefaultView.ChartLegend>
+                            </telerik:ChartDefaultView>
+                        </telerik:RadChart.DefaultView>
+                    </telerik:RadChart>
+                    <telerik:RadChart  Margin="508,10,10,10">
+                        <telerik:RadChart.DefaultView>
+                            <telerik:ChartDefaultView>
+                                <telerik:ChartDefaultView.ChartTitle>
+                                    <telerik:ChartTitle Content="Improved algorithm"></telerik:ChartTitle>
+                                </telerik:ChartDefaultView.ChartTitle>
+                                <telerik:ChartDefaultView.ChartLegend>
+                                    <telerik:ChartLegend Header="Legend"></telerik:ChartLegend>
+                                </telerik:ChartDefaultView.ChartLegend>
+                            </telerik:ChartDefaultView>
+                        </telerik:RadChart.DefaultView>
+                    </telerik:RadChart>
+                </Grid>
+            </telerik:RadTabItem>
+            <telerik:RadTabItem x:Name="VisualizationTab" Header="Visualization" Height="46" Width="100">
+                <Grid Background="Transparent">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+			            HorizontalScrollBarVisibility="Auto" Margin="0,0,279,0">
+                        <Canvas x:Name="mainCanvas" Width="687" Height="508"/>
+                    </ScrollViewer>
+                    <Button x:Name="button" Content="Run" Margin="0,10,10,0"
+			                Click="Button_OnClick"
+                            Height="51" 
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Width="264"/>
+                </Grid>
+            </telerik:RadTabItem>
+            
+        </telerik:RadTabControl>
     </Grid>
 </Window>

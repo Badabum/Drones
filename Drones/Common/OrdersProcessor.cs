@@ -11,10 +11,12 @@ namespace Drones.Common
     {
         private readonly DataModel _dataModel;
 
-        public delegate void RefreshDrones(List<Drone> drones);
+        //drones redrawind event
+        public event Action<List<Drone>> onDronesChanged;
+        //orders redrawind event
+        public event Action<List<Order>> onOrdersChanged;
 
-        public event RefreshDrones onDronesChanged;
-
+        public event Action<int, int> onOrdersCountChanged;
         public OrdersProcessor(DataModel dataModel)
         {
             _dataModel = dataModel;
@@ -24,7 +26,7 @@ namespace Drones.Common
         {
             var output = new List<string>();//comands
             var productQueue = MakeOrderProductQueue(_dataModel.Orders);
-            var freeDronesQueue = InitDronesWithCommands(productQueue, 1,
+            var freeDronesQueue = InitDronesWithCommands(productQueue, _dataModel.GeneralInfo.Drones,
                 _dataModel.GeneralInfo.MaxWeight, _dataModel.Warehouses, _dataModel.Orders);
             var droneList = freeDronesQueue.ToList();
 
@@ -58,6 +60,12 @@ namespace Drones.Common
                             drone.Turns = command.Turns;
                             drone.R = command.R;
                             drone.C = command.C;
+                            var completedOrders = GetCompletedOrders(_dataModel.Orders);
+                            if (completedOrders.Count > 0)
+                            {
+                                CallUpdateEvent(onOrdersChanged,completedOrders,500,t);
+                                UpdateChart(onOrdersCountChanged, _dataModel.Orders.Count - completedOrders.Count,t,500,t);
+                            }
                             output.Add(command.CommandString);
                         }
                     }
@@ -82,15 +90,37 @@ namespace Drones.Common
                     }
                     
                 }
-                if (t%500 == 0)
-                {
-                    onDronesChanged?.Invoke(droneList);
-                    Thread.Sleep(500);
+                CallUpdateEvent(onDronesChanged,droneList,500,t);
+                //if (t%500 == 0)
+                //{
+                //    onDronesChanged?.Invoke(droneList);
+                //    Thread.Sleep(500);
 
-                }
+                //}
             }
         }
-        
+
+        private void UpdateChart(Action<int, int> action, int count, int iteration, int updateInterval, int currentStep)
+        {
+            if (currentStep % updateInterval == 0)
+            {
+                action?.Invoke(count,iteration);
+                Thread.Sleep(500);
+            }
+        }
+        private void CallUpdateEvent<T>(Action<List<T>> action,List<T> items,  int updateInterval, int currentStep)
+        {
+            if (currentStep % updateInterval == 0)
+            {
+                action?.Invoke(items);
+                Thread.Sleep(500);
+            }
+        }
+        public List<Order> GetCompletedOrders(List<Order> allOrders)
+        {
+            var completedOrders = allOrders.Where(order => order.Completed());
+            return completedOrders.ToList();
+        }
         public Queue<Drone> InitDronesWithCommands(Dictionary<OrderDto,Point> productQueue,int dronesNumber, int droneMaxWeight, List<Warehouse> warehouses, List<Order> orders)
         {
             var dronesQueue = new Queue<Drone>();
@@ -129,7 +159,6 @@ namespace Drones.Common
             }
             return productQueue;
         }
-
         public Drone SetDroneCommands(Drone drone,List<Warehouse> warehouses,KeyValuePair<OrderDto,Point> product,List<Order> orders)
         {
             var warehouse = drone.GetNearestWarehouse(drone.R, drone.C, product.Key.ProductItem, warehouses);

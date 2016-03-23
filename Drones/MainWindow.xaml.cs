@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,8 @@ using System.Windows.Shapes;
 using Drones.Common;
 using Drones.Models;
 using GHQualification.Models;
+using Telerik.Windows.Controls.Charting;
+using Line = System.Windows.Shapes.Line;
 
 namespace Drones
 {
@@ -27,6 +30,7 @@ namespace Drones
     {
         private readonly int gridCellSize = 3;
         private OrdersProcessor _ordersProcessor;
+        private DataSeries _simpleSeries;
         public MainWindow()
         {
             const string busyDay = "busy_day";
@@ -41,11 +45,33 @@ namespace Drones
             DrawObjects(_dataModel.Warehouses, Brushes.Green,3, gridCellSize);
             DrawObjects(_dataModel.Orders, Brushes.Yellow,1,gridCellSize);
             _ordersProcessor =  new OrdersProcessor(_dataModel);
+            _simpleSeries = new DataSeries {Definition = new SplineSeriesDefinition()};
+            _simpleSeries.Add(new DataPoint(1, 154));
+            _simpleSeries.Add(new DataPoint(2, 138));
+            _simpleSeries.Add(new DataPoint(3, 143));
+            _simpleSeries.Add(new DataPoint(4, 120));
+            _simpleSeries.Add(new DataPoint(5, 135));
+            _simpleSeries.Add(new DataPoint(6, 125));
+            _simpleSeries.Add(new DataPoint(7, 179));
+            _simpleSeries.Add(new DataPoint(8, 170));
+            _simpleSeries.Add(new DataPoint(9, 198));
+            _simpleSeries.Add(new DataPoint(10, 187));
+            _simpleSeries.Add(new DataPoint(11, 193));
+            _simpleSeries.Add(new DataPoint(12, 212));
+            simpleAlgoChart.DefaultView.ChartArea.DataSeries.Add(_simpleSeries);
             _ordersProcessor.onDronesChanged += (drones) =>
             {
                 Dispatcher.Invoke((Action)delegate { RedrawDrones(drones); });
             };
 
+            //_ordersProcessor.onOrdersChanged += (orders) =>
+            //{
+            //    Dispatcher.Invoke((Action)delegate { RefreshOrders(orders); });
+            //};
+            _ordersProcessor.onOrdersCountChanged += (ordersCount, iteration) =>
+            {
+                Dispatcher.Invoke((Action)delegate { AddPointToChart(ordersCount, iteration); });
+            };
 
         }
 
@@ -125,6 +151,23 @@ namespace Drones
                 var element2 = (UIElement)LogicalTreeHelper.FindLogicalNode(mainCanvas, drone.Name);
                 mainCanvas.Children.Remove(element2);
             }
+        }
+
+        private void RefreshOrders(List<Order> orders)
+        {
+            foreach (var order in orders)
+            {
+                var uiElement = (UIElement) LogicalTreeHelper.FindLogicalNode(mainCanvas, order.Name);
+                mainCanvas.Children.Remove(uiElement);
+            }
+        }
+
+        private void AddPointToChart(int ordersCount,int iteration)
+        {
+            var dataPoint = new DataPoint(iteration, ordersCount);
+            
+            _simpleSeries.Add(dataPoint);
+            
         }
         private async void Button_OnClick(object sender, RoutedEventArgs e)
         {

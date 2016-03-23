@@ -46,6 +46,7 @@ namespace Drones.Models
         public void AddDeliveryCommand(KeyValuePair<OrderDto, Point> product, List<Order> orders)
         {
             var order = orders[product.Key.OrderId];
+            order.RemoveProduct(product.Key.ProductItem);
             Commands.Enqueue(new Command()
             {
                 //CommandString = $"{Id} D {product.Key.OrderId} {product.Key.ProductItem} 1",

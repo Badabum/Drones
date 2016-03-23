@@ -10,7 +10,9 @@ namespace GHQualification.Models
     public class Order:IDrawableObject
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+
+        public string Name => $"o{Id}";
+
         public int R { get; set; }
         public int C { get; set; }
         public int ProductItemsCount { get; set; }
@@ -20,6 +22,11 @@ namespace GHQualification.Models
         {
             var product = Products.First(p => p == productId);
             Products.Remove(product);
+        }
+
+        public bool Completed()
+        {
+            return Products.Count <= 0;
         }
     }
 }
