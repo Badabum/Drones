@@ -9,35 +9,117 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000">
     <Grid>
-        
-        
-        <telerik:RadTabControl x:Name="radTabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="BusyDay.in" Click="LoadBusyDay"/>
+                    <MenuItem Header="Redundancy.in" Click="LoadRedundancy"/>
+                    <MenuItem Header="mother_of_varehouses.in" Click="LoadMother"/>
+                </MenuItem>
+                <MenuItem Header="About">
+                    <MenuItem  Header="About" Click="ShowAboutDialog"/>
+                </MenuItem>
+            </Menu>
+
+            <TextBox AcceptsReturn="True" Name="txtEditor" />
+        </DockPanel>
+
+        <telerik:RadTabControl x:Name="radTabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,19,0,0">
             <telerik:RadTabItem x:Name="ChartsTab" Header="Charts" Height="46" Width="100">
                 <Grid Background="Transparent">
-                    <telerik:RadChart Name="simpleAlgoChart" Margin="10,10,508,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="136*">
+
+                        </RowDefinition>
+                        <RowDefinition Height="123*">
+
+                        </RowDefinition>
+                    </Grid.RowDefinitions>
+                    <telerik:RadChart Grid.Column="0" Name="simpleAlgoChart" Margin="10,10,10,68">
                         <telerik:RadChart.DefaultView>
                             <telerik:ChartDefaultView>
                                 <telerik:ChartDefaultView.ChartTitle>
-                                    <telerik:ChartTitle Content="Basic algorithm"></telerik:ChartTitle>
+                                    <telerik:ChartTitle Content="Базовый алгоритм"></telerik:ChartTitle>
                                 </telerik:ChartDefaultView.ChartTitle>
                                 <telerik:ChartDefaultView.ChartLegend>
-                                    <telerik:ChartLegend Header="Legend"></telerik:ChartLegend>
+                                    <telerik:ChartLegend Header="Легенда"></telerik:ChartLegend>
                                 </telerik:ChartDefaultView.ChartLegend>
+                                <telerik:ChartDefaultView.ChartArea>
+                                    <telerik:ChartArea>
+                                        <telerik:ChartArea.AxisX>
+                                            <telerik:AxisX Title="Итерации"></telerik:AxisX>
+                                        </telerik:ChartArea.AxisX>
+                                        <telerik:ChartArea.AxisY>
+                                            <telerik:AxisY Title="Заказы"></telerik:AxisY>
+                                        </telerik:ChartArea.AxisY>
+                                    </telerik:ChartArea>
+                                </telerik:ChartDefaultView.ChartArea>
                             </telerik:ChartDefaultView>
                         </telerik:RadChart.DefaultView>
                     </telerik:RadChart>
-                    <telerik:RadChart  Margin="508,10,10,10">
+                    <telerik:RadChart  Name="ImprovedChart" Margin="10,10,13,68" Grid.Column="1">
                         <telerik:RadChart.DefaultView>
                             <telerik:ChartDefaultView>
                                 <telerik:ChartDefaultView.ChartTitle>
-                                    <telerik:ChartTitle Content="Improved algorithm"></telerik:ChartTitle>
+                                    <telerik:ChartTitle Content="Улучшеный алгоритм"></telerik:ChartTitle>
                                 </telerik:ChartDefaultView.ChartTitle>
                                 <telerik:ChartDefaultView.ChartLegend>
-                                    <telerik:ChartLegend Header="Legend"></telerik:ChartLegend>
+                                    <telerik:ChartLegend Header="Легенда"></telerik:ChartLegend>
                                 </telerik:ChartDefaultView.ChartLegend>
+                                <telerik:ChartDefaultView.ChartArea>
+                                    <telerik:ChartArea>
+                                        <telerik:ChartArea.AxisX>
+                                            <telerik:AxisX Title="Итерации"></telerik:AxisX>
+                                        </telerik:ChartArea.AxisX>
+                                        <telerik:ChartArea.AxisY>
+                                            <telerik:AxisY Title="Заказы"></telerik:AxisY>
+                                        </telerik:ChartArea.AxisY>
+                                    </telerik:ChartArea>
+                                </telerik:ChartDefaultView.ChartArea>
+
                             </telerik:ChartDefaultView>
                         </telerik:RadChart.DefaultView>
                     </telerik:RadChart>
+                    <Button x:Name="button3" Grid.Column="0" Content="Очистить" Margin="170,0,209,14" Click="ClearSimpleChart" Height="36" VerticalAlignment="Bottom"/>
+                    <Button x:Name="button1" Grid.Column="0" Content="Начать симуляцию" HorizontalAlignment="Left" Margin="13,0,0,14" Width="152" Click="button1_Click" Height="36" VerticalAlignment="Bottom"/>
+                    <Button x:Name="button2" Grid.Column="1" Content="Начать симуляцию" HorizontalAlignment="Left" Margin="10,0,0,14" Width="161" Click="button2_Click" Height="36" VerticalAlignment="Bottom"/>
+                    <Button x:Name="button4" Content="Очистить" Grid.Column="1" HorizontalAlignment="Left" Margin="176,0,0,14" Width="133" Click="ClearImprovedChart" Height="36" VerticalAlignment="Bottom"/>
+                    <telerik:RadChart Name="bestChart" Margin="10,10,186,10" Grid.Row="1" Grid.ColumnSpan="2">
+                        <telerik:RadChart.DefaultView>
+                            <telerik:ChartDefaultView>
+                                <telerik:ChartDefaultView.ChartTitle>
+                                    <telerik:ChartTitle Content="Наилучший алгоритм" RenderTransformOrigin="0.5,0.5" Height="29">
+                                        <telerikCharting:ChartTitle.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform/>
+                                                <SkewTransform/>
+                                                <RotateTransform Angle="-0.008"/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </telerikCharting:ChartTitle.RenderTransform>
+                                    </telerik:ChartTitle>
+                                </telerik:ChartDefaultView.ChartTitle>
+                                <telerik:ChartDefaultView.ChartLegend>
+                                    <telerik:ChartLegend Header="Легенда"></telerik:ChartLegend>
+                                </telerik:ChartDefaultView.ChartLegend>
+                                <telerik:ChartDefaultView.ChartArea>
+                                    <telerik:ChartArea>
+                                        <telerik:ChartArea.AxisX>
+                                            <telerik:AxisX Title="Итерации"></telerik:AxisX>
+                                        </telerik:ChartArea.AxisX>
+                                        <telerik:ChartArea.AxisY>
+                                            <telerik:AxisY Title="Заказы"></telerik:AxisY>
+                                        </telerik:ChartArea.AxisY>
+                                    </telerik:ChartArea>
+                                </telerik:ChartDefaultView.ChartArea>
+                            </telerik:ChartDefaultView>
+                        </telerik:RadChart.DefaultView>
+                    </telerik:RadChart>
+                    <Button x:Name="button5" Content="Начать симуляцию" Grid.Column="1" Margin="0,10,13,0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Right" Width="159" Height="33" Click="RunBestSimulation"/>
                 </Grid>
             </telerik:RadTabItem>
             <telerik:RadTabItem x:Name="VisualizationTab" Header="Visualization" Height="46" Width="100">
@@ -46,7 +128,7 @@
 			            HorizontalScrollBarVisibility="Auto" Margin="0,0,279,0">
                         <Canvas x:Name="mainCanvas" Width="687" Height="508"/>
                     </ScrollViewer>
-                    <Button x:Name="button" Content="Run" Margin="0,10,10,0"
+                    <Button x:Name="button" Content="Запустить" Margin="0,10,10,0"
 			                Click="Button_OnClick"
                             Height="51" 
                             VerticalAlignment="Top"
@@ -55,6 +137,8 @@
                 </Grid>
             </telerik:RadTabItem>
             
+
+
         </telerik:RadTabControl>
     </Grid>
 </Window>

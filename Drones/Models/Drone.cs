@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Drones.Common;
 using GHQualification.Models;
 
@@ -45,7 +46,7 @@ namespace Drones.Models
 
         public void AddDeliveryCommand(KeyValuePair<OrderDto, Point> product, List<Order> orders)
         {
-            var order = orders[product.Key.OrderId];
+            var order = orders.FirstOrDefault(o=>o.Id==product.Key.OrderId);
             order.RemoveProduct(product.Key.ProductItem);
             Commands.Enqueue(new Command()
             {
@@ -84,6 +85,24 @@ namespace Drones.Models
                     //Free = true;
                 }
             }
+        }
+
+        public int GetBestOrder(Dictionary<OrderDto,Point> queue)
+        {
+            var bestOrderId = -1;
+            var bestValue = Int32.MaxValue;
+            foreach (var order in queue)
+            {
+                var turns = GetTurns(order.Value.R, order.Value.C);
+                var orderEntity = order.Key.Order;
+                var computedValue = turns*orderEntity.Products.Count;
+                if (computedValue < bestValue)
+                {
+                    bestValue = computedValue;
+                    bestOrderId = order.Key.OrderId;
+                }
+            }
+            return bestOrderId;
         }
         
     }

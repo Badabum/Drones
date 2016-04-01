@@ -1,0 +1,18 @@
+﻿<Window x:Class="Drones.AboutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Drones"
+        mc:Ignorable="d"
+        Title="О программе" Height="442.105" Width="589.849">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left"  TextWrapping="Wrap" 
+    		VerticalAlignment="Top" Height="350" Width="562" Margin="10,43,0,0" FontSize="14"><Run Text="Описание работ"/><Run Text="ы:"/><LineBreak/><Run Text="1)Базовый алгоритм на первом этапе создает очередь заказов для дронов. Следующий шаг - создание очереди свободных дронов и начальная нициализация их заказами которые нужно выполнить.  Далее запускается симуляция процесса доставки заказов: дроны выполнившие заказ помещаются обратно в очередь свободных дронов и снова инициализируются заказом из очереди заказов. Так продолжается пока есть хотя бы 1 невыполненый заказ."/><LineBreak/><Run Text="2)Улучшеный алгоритм работает на основе базового но на каждом шаге симуляции каждый дрон свободный дрон выбирает заказ с "/><Run Text="ми"/><Run Text="минимальным коли"/><Run Text="чеством продуктов необходимых для его закрытия. Даный алгоритм дает прирост скорости выполнения заказов в среднем около 20-30%."/><LineBreak/><Run Text="3)Наилучший алгоритм работает на основе улучшеного алгоритма но тут каждый дрон при определении наиболее выгодного заказа руководствуется такими показателями - минимальное количество продуктов для его закрытия и минимальное расстояние до заказа. Таким образом мы пытаемся минимизировать составную характеристику. Даный алгоритм показал наилучшую производительность и в среднем работает в 2 раза быстрее чем предыдущие."/></TextBlock>
+        <TextBlock x:Name="textBlock1" FontSize="14" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="562" Height="38" Margin="10,0,0,0"><Run Text="Drones. "/><Run Text="Сделано усилиями следующих лиц: "/><Run Text="Коротенко "/><Run Text="І., Копилаш В. Клейменов Р."/></TextBlock>
+
+    </Grid>
+</Window>
